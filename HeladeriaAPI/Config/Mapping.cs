@@ -5,6 +5,8 @@ using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
 using HeladeriaAPI.Models.Ingrediente.Dto;
+using HeladeriaAPI.Models.Categoria;
+using HeladeriaAPI.Models.Categoria.Dto;
 
 namespace HeladeriaAPI.Config
 {
@@ -48,6 +50,16 @@ namespace HeladeriaAPI.Config
                 {
                     opts.Condition((src, dest, srcMember) => srcMember != null);
                 });
+
+            CreateMap<CreateCategoriaDTO, Categoria>().ReverseMap();
+
+            CreateMap<UpdateCategoriaDTO, Categoria>()
+                .ForAllMembers(opts =>
+                {
+                    opts.Condition((src, dest, srcMember) => srcMember != null);
+                });
+
+            CreateMap<Categoria, AllCategoriaDTO>().ReverseMap();
         }
     }
 }

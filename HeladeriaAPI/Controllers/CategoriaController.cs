@@ -22,7 +22,7 @@ namespace HeladeriaAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<List<AllCategoriaDTO>> GetCategoria()
+        public async Task<List<AllCategoriaDTO>> GetCategorias()
         {
             return await _categoriaServices.GetAll();
         }
@@ -36,8 +36,7 @@ namespace HeladeriaAPI.Controllers
         {
             try
             {
-                var categoria = await _categoriaServices.GetOneById(id);
-                return Ok(categoria);
+                return await _categoriaServices.GetOneById(id);
             }
             catch(HttpError ex)
             {
