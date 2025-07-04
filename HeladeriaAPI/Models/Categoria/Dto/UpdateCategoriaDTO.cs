@@ -5,6 +5,6 @@ namespace HeladeriaAPI.Models.Categoria.Dto
     public class UpdateCategoriaDTO
     {
         [StringLength(50, ErrorMessage = "El nombre no puede superar los 50 caracteres.")]
-        public string Nombre { get; set; } = null!;
+        public string nombreCategoria { get; set; } = null!;
     }
 }

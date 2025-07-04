@@ -2,11 +2,11 @@
 
 namespace HeladeriaAPI.Models.Helado.Dto
 {
-    public class CreateHeladoDTO //DTO para crear un helado
+    public class CreateHeladoDTO
     {
         [Required(ErrorMessage = "El nombre del helado es obligatorio.")]
         [StringLength(100, ErrorMessage = "El nombre del helado no puede exceder los 100 caracteres.")]
-        public string Nombre { get; set; } = null!;
+        public string nombreHelado { get; set; } = null!;
 
         [Required(ErrorMessage = "La descripción del helado es obligatoria.")]
         [StringLength(255, ErrorMessage = "La descripción del helado no puede exceder los 255 caracteres.")]
@@ -18,5 +18,11 @@ namespace HeladeriaAPI.Models.Helado.Dto
 
         [Required(ErrorMessage = "Debe especificar si el helado es artesanal o no.")]
         public bool IsArtesanal { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar una categoría.")]
+        public int CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "Debe seleccionar un estado.")]
+        public int EstadoId { get; set; }
     }
 }

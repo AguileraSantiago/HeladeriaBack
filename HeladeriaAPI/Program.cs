@@ -8,7 +8,14 @@ var builder = WebApplication.CreateBuilder(args); //Se crea un builder para conf
 
 // Add services to the container.
 
-builder.Services.AddControllers(); //Aquí se agrega soporte para controladores (API controllers) a la app. Básicamente, te dice “vamos a usar controladores para manejar las peticiones HTTP”.
+//builder.Services.AddControllers(); 
+//Aquí se agrega soporte para controladores (API controllers) a la app. Básicamente, te dice “vamos a usar controladores para manejar las peticiones HTTP”.
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 
 //Se agregan servicios para generar documentación automática de la API con Swagger.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

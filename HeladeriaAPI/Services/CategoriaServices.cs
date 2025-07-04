@@ -34,7 +34,10 @@ namespace HeladeriaAPI.Services
 
         public async Task<List<AllCategoriaDTO>> GetAll()
         {
-            var categorias = await _db.Categorias.ToListAsync();
+            var categorias = await _db.Categorias
+                .Include(c => c.Helados) // 👈 Esto trae los helados relacionados
+                .ToListAsync();
+
             return _mapper.Map<List<AllCategoriaDTO>>(categorias);
         }
 

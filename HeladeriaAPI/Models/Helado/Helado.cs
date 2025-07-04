@@ -12,7 +12,7 @@ namespace HeladeriaAPI.Models.Helado
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
+        public string nombreHelado { get; set; } = null!;
         public string Descripcion { get; set; } = null!;
         public double Precio { get; set; }
         public bool IsArtesanal { get; set; }

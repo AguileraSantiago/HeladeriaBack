@@ -9,6 +9,6 @@ namespace HeladeriaAPI.Models.Estado //indica que la clase Estado pertenece al s
         [Key]//esta propiedad es la clave primaria de la tabla.
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]//la base de datos genera automáticamente un valor secuencial (auto-incremental) al crear una nueva fila.
         public int Id { get; set; } //identificador único del estado.
-        public string Nombre { get; set; } = null!; //Nombre: representa el nombre del estado (por ejemplo, "Disponible", "Pendiente", etc.).
+        public string nombreEstado { get; set; } = null!; //Nombre: representa el nombre del estado (por ejemplo, "Disponible", "Pendiente", etc.).
     }
 }

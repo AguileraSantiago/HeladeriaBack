@@ -20,21 +20,30 @@ namespace HeladeriaAPI.Config
         public DbSet<Categoria> Categorias { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder) //Este método se llama cuando se está creando el modelo de la base de datos. Usás modelBuilder para configurar las entidades, relaciones, índices, valores por defecto, etc.
         {
-            modelBuilder.Entity<Estado>().HasIndex(e => e.Nombre).IsUnique(); //Crea un índice único en la columna Nombre de la tabla Estados. Así se evita que haya dos estados con el mismo nombre (por ejemplo, dos "Disponible").
+
+            modelBuilder.Entity<Helado>().HasIndex(h => h.nombreHelado).IsUnique();
+            modelBuilder.Entity<Helado>().HasData(
+                new Helado { Id = 1, nombreHelado = "Menta Granizada", Descripcion = "Helado de menta con chips de chocolate", Precio = 1500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 2 },
+                new Helado { Id = 2, nombreHelado = "Sambayon", Descripcion = "Helado de sambayon", Precio = 2500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 3 },
+                new Helado { Id = 3, nombreHelado = "Pastel de lima", Descripcion = "Helado de pastel de lima", Precio = 1000.00, IsArtesanal = true, EstadoId = 3, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 1 }
+                );
+
+
+            modelBuilder.Entity<Estado>().HasIndex(e => e.nombreEstado).IsUnique(); //Crea un índice único en la columna Nombre de la tabla Estados. Así se evita que haya dos estados con el mismo nombre (por ejemplo, dos "Disponible").
             //Inserta estos tres registros automáticamente al crear o migrar la base de datos. Muy útil para tener datos básicos predefinidos que necesita tu sistema.
             modelBuilder.Entity<Estado>().HasData(
-                new Estado { Id = 1, Nombre = "Disponible" },
-                new Estado { Id = 2, Nombre = "Pendiente" },
-                new Estado { Id = 3, Nombre = "No Disponible" }
+                new Estado { Id = 1, nombreEstado = "Disponible" },
+                new Estado { Id = 2, nombreEstado = "Pendiente" },
+                new Estado { Id = 3, nombreEstado = "No Disponible" }
             );
-            modelBuilder.Entity<Ingrediente>().HasIndex(e => e.Nombre).IsUnique(); //Lo mismo, pero para los ingredientes. No se permite que se repita un nombre como "Azúcar".
+            modelBuilder.Entity<Ingrediente>().HasIndex(e => e.nombreIngrediente).IsUnique(); //Lo mismo, pero para los ingredientes. No se permite que se repita un nombre como "Azúcar".
             modelBuilder.Entity<Ingrediente>().HasData(
-                new Ingrediente { Id = 1, Nombre = "default" },
-                new Ingrediente { Id = 2, Nombre = "Leche" },
-                new Ingrediente { Id = 3, Nombre = "Azucar" },
-                new Ingrediente { Id = 4, Nombre = "Alcohol" },
-                new Ingrediente { Id = 5, Nombre = "Chocolate" },
-                new Ingrediente { Id = 6, Nombre = "Crema" }
+                new Ingrediente { Id = 1, nombreIngrediente = "default" },
+                new Ingrediente { Id = 2, nombreIngrediente = "Leche" },
+                new Ingrediente { Id = 3, nombreIngrediente = "Azucar" },
+                new Ingrediente { Id = 4, nombreIngrediente = "Alcohol" },
+                new Ingrediente { Id = 5, nombreIngrediente = "Chocolate" },
+                new Ingrediente { Id = 6, nombreIngrediente = "Crema" }
             );
             // Para que la fecha de creación se establezca automáticamente al crear un nuevo helado
             modelBuilder.Entity<Helado>().Property(h => h.FechaCreacion).HasDefaultValueSql("GETUTCDATE()"); //Indica que cuando se cree un helado, si no se indica fecha, se usará GETUTCDATE() de SQL Server. Es decir, pone automáticamente la fecha de creación en UTC.         
@@ -48,12 +57,12 @@ namespace HeladeriaAPI.Config
                 r => r.HasOne<Helado>().WithMany().HasForeignKey(e => e.HeladoId)
             );
 
-            modelBuilder.Entity<Categoria>().HasIndex(e => e.Nombre).IsUnique(); 
+            modelBuilder.Entity<Categoria>().HasIndex(e => e.nombreCategoria).IsUnique(); 
             modelBuilder.Entity<Categoria>().HasData(
-                new Categoria { Id = 1, Nombre = "Frutales" },
-                new Categoria { Id = 2, Nombre = "Granizados" },
-                new Categoria { Id = 3, Nombre = "Chocolate" },
-                new Categoria { Id = 4, Nombre = "Al agua" }
+                new Categoria { Id = 1, nombreCategoria = "Frutales" },
+                new Categoria { Id = 2, nombreCategoria = "Granizados" },
+                new Categoria { Id = 3, nombreCategoria = "Chocolate" },
+                new Categoria { Id = 4, nombreCategoria = "Al agua" }
             );
 
             //¿Qué significa esto?

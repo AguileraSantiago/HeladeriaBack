@@ -49,7 +49,7 @@ namespace HeladeriaAPI.Services
         // Busca un Estado por su Nombre
         public async Task<Estado> GetOneByName(string nombre)
         {
-            var estado = await _db.Estados.FirstOrDefaultAsync(e => e.Nombre == nombre);
+            var estado = await _db.Estados.FirstOrDefaultAsync(e => e.nombreEstado == nombre);
             if (estado == null) //Si no lo encuentra, lanza una excepción 404 con mensaje específico.
             {
                 throw new HttpError($"No se encontro el Estado con Nombre = {nombre}", HttpStatusCode.NotFound);

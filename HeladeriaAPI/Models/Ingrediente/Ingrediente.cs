@@ -8,7 +8,7 @@ namespace HeladeriaAPI.Models.Ingrediente
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public string Nombre { get; set; } = null!;
+        public string nombreIngrediente { get; set; } = null!;
     }
 
     public class IngredienteHelado //Esta clase representa una tabla intermedia (también llamada de unión) entre Helado e Ingrediente.

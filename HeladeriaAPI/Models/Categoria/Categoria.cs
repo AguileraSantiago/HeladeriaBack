@@ -11,7 +11,7 @@ namespace HeladeriaAPI.Models.Categoria
         public int Id { get; set; }
 
         [Required]
-        public string Nombre { get; set; } = null!;
+        public string nombreCategoria { get; set; } = null!;
 
         public ICollection<Helado.Helado> Helados { get; set; } = new List<Helado.Helado>();
     }

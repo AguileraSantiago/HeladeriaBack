@@ -68,11 +68,26 @@ namespace HeladeriaAPI.Services
         public async Task<Helado> CreateOne(CreateHeladoDTO helado) {
 
             var h = _mapper.Map<Helado>(helado);
-            var estado = await _estadoServices.GetOneByName("Pendiente");
+
+            // Buscar estado por ID enviado por el usuario
+            var estado = await _db.Estados.FindAsync(helado.EstadoId);
+            if (estado == null)
+                throw new HttpError($"Estado con ID = {helado.EstadoId} no encontrado", HttpStatusCode.BadRequest);
             h.Estado = estado;
 
+            // Asignar ingrediente default
             var ingredienteDefault = await _ingredienteServices.GetOneByName("default");
+            if (ingredienteDefault == null)
+                throw new HttpError("Ingrediente 'default' no encontrado", HttpStatusCode.BadRequest);
             h.Ingredientes = new List<Ingrediente> { ingredienteDefault };
+
+            // Buscar categoría por ID enviado por el usuario
+            var categoria = await _db.Categorias.FindAsync(helado.CategoriaId);
+            if (categoria == null)
+                throw new HttpError($"Categoría con ID = {helado.CategoriaId} no encontrada", HttpStatusCode.BadRequest);
+            h.Categoria = categoria;
+
+            h.FechaCreacion = DateTime.UtcNow;
 
             await _db.Helados.AddAsync(h);
             await _db.SaveChangesAsync();
@@ -87,16 +102,22 @@ namespace HeladeriaAPI.Services
         public async Task<Helado> UpdateOneById(int id, UpdateHeladoDTO helado)
         {
             var heladoToUpdate = await GetOneByIdOrException(id);
-           
-           var heladoUpdated = _mapper.Map(helado, heladoToUpdate);
 
+            // Actualizar campos uno por uno solo si vinieron con valor
+            if (helado.nombreHelado  != null) heladoToUpdate.nombreHelado = helado.nombreHelado;
+            if (helado.Descripcion != null) heladoToUpdate.Descripcion = helado.Descripcion;
+            if (helado.Precio.HasValue) heladoToUpdate.Precio = helado.Precio.Value;
+            if (helado.IsArtesanal.HasValue) heladoToUpdate.IsArtesanal = helado.IsArtesanal.Value;
+            if (helado.CategoriaId.HasValue) heladoToUpdate.CategoriaId = helado.CategoriaId.Value;
+            if (helado.EstadoId.HasValue) heladoToUpdate.EstadoId = helado.EstadoId.Value;
+
+            // Ingredientes (solo si vienen)
             if (helado.IngredientesIds != null && helado.IngredientesIds.Any())
             {
                 var ingredientes = await _ingredienteServices.GetAllByIds(helado.IngredientesIds);
-                heladoUpdated.Ingredientes = ingredientes;
+                heladoToUpdate.Ingredientes = ingredientes;
             }
 
-            _db.Helados.Update(heladoUpdated);
             await _db.SaveChangesAsync();
 
             return heladoToUpdate;

@@ -32,7 +32,6 @@ namespace HeladeriaAPI.Config
             //PD: Esta solución hay que aplicarla para todos aquellos tipos que no tengan como valor por defecto 'null'
 
 
-            CreateMap<Helado, AllHeladoDTO>().ReverseMap();
             CreateMap<CreateHeladoDTO, Helado>().ReverseMap();
 
             // Actualizar y no parsear los valores 'NULL'
@@ -42,6 +41,8 @@ namespace HeladeriaAPI.Config
                 {
                     opts.Condition((src, dest, srcMember) => srcMember != null);
                 });
+
+            CreateMap<Helado, AllHeladoDTO>().ReverseMap();
 
             // Ingrediente mappings
             CreateMap<CreateIngredienteDTO, Ingrediente>().ReverseMap();
@@ -60,6 +61,8 @@ namespace HeladeriaAPI.Config
                 });
 
             CreateMap<Categoria, AllCategoriaDTO>().ReverseMap();
+
+            CreateMap<Helado, NombreHeladoDTO>();
         }
     }
 }

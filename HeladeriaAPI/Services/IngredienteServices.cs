@@ -64,7 +64,7 @@ namespace HeladeriaAPI.Services
         // Busca un ingrediente por nombre.
         public async Task<Ingrediente> GetOneByName(string nombre)
         {
-            var ingrediente = await _db.Ingredientes.FirstOrDefaultAsync(e => e.Nombre == nombre);
+            var ingrediente = await _db.Ingredientes.FirstOrDefaultAsync(e => e.nombreIngrediente == nombre);
             if (ingrediente == null)//Si no lo encuentra, lanza error 404 con mensaje claro.
             {
                 throw new HttpError($"No se encontro el Ingrediente con Nombre = {nombre}", HttpStatusCode.NotFound);
