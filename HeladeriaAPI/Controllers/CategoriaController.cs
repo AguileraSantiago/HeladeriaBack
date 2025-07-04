@@ -36,15 +36,16 @@ namespace HeladeriaAPI.Controllers
         {
             try
             {
-                return await _categoriaServices.GetOneById(id);
+                var categoriaDTO = await _categoriaServices.GetOneByIdDTO(id);
+                return Ok(categoriaDTO);
             }
-            catch(HttpError ex)
+            catch (HttpError ex)
             {
                 return StatusCode((int)ex.StatusCode, new HttpMessage(ex.Message));
             }
-            catch 
+            catch
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new HttpMessage("Algo salio mal"));
+                return StatusCode(StatusCodes.Status500InternalServerError, new HttpMessage("Algo salió mal"));
             }
         }
 

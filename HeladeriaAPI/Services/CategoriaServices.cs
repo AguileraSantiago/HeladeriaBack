@@ -42,9 +42,16 @@ namespace HeladeriaAPI.Services
         }
 
 
-        public async Task<Categoria> GetOneById(int id)
+        public async Task<AllCategoriaDTO> GetOneByIdDTO(int id)
         {
-            return await GetOneByIdOrException(id);
+            var categoria = await _db.Categorias
+                .Include(c => c.Helados)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (categoria == null)
+                throw new HttpError("Categoría no encontrada", HttpStatusCode.NotFound);
+
+            return _mapper.Map<AllCategoriaDTO>(categoria);
         }
 
 
