@@ -4,7 +4,8 @@
     {
         public string Message { get; set; } = null!;
 
-        public HttpMessage(string message) {
+        public HttpMessage(string message)
+        {
             Message = message;
         }
     }

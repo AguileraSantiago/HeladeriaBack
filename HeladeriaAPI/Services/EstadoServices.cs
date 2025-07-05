@@ -1,11 +1,9 @@
-﻿using AutoMapper;
+﻿using System.Net;//para usar HttpStatusCode, como por ejemplo HttpStatusCode.NotFound.
+using AutoMapper;
 using HeladeriaAPI.Config;//se usa para acceder a la clase ApplicationDbContext, que maneja la base de datos.
 using HeladeriaAPI.Models.Estado;
-using HeladeriaAPI.Models.Helado;
-using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Utils;//se usa para la clase personalizada HttpError.
 using Microsoft.EntityFrameworkCore;//para utilizar métodos como .Where(), .ToListAsync() y .FirstOrDefaultAsync().
-using System.Net;//para usar HttpStatusCode, como por ejemplo HttpStatusCode.NotFound.
 
 namespace HeladeriaAPI.Services
 {

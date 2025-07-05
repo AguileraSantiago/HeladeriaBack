@@ -21,12 +21,10 @@ namespace HeladeriaAPI.Services
         private async Task<Categoria> GetOneByIdOrException(int id)
         {
             var categoria = await _db.Categorias
-                .Include(c => c.Helados)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (categoria == null)
                 throw new HttpError($"No se encontró la categoría con ID = {id}", HttpStatusCode.NotFound);
-
 
             return categoria;
         }
@@ -34,18 +32,19 @@ namespace HeladeriaAPI.Services
 
         public async Task<List<AllCategoriaDTO>> GetAll()
         {
-            var categorias = await _db.Categorias
-                .Include(c => c.Helados) // 👈 Esto trae los helados relacionados
-                .ToListAsync();
-
-            return _mapper.Map<List<AllCategoriaDTO>>(categorias);
+            return await _db.Categorias
+      .Select(c => new AllCategoriaDTO
+      {
+          Id = c.Id,
+          nombreCategoria = c.nombreCategoria
+      })
+      .ToListAsync();
         }
 
 
         public async Task<AllCategoriaDTO> GetOneByIdDTO(int id)
         {
             var categoria = await _db.Categorias
-                .Include(c => c.Helados)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (categoria == null)
@@ -85,7 +84,7 @@ namespace HeladeriaAPI.Services
 
             if (await _db.Categorias.AnyAsync(c => c.Id == id))
             {
-                throw new HttpError($"No se pudo eliminar la categoria con ID = {id}", HttpStatusCode.InternalServerError);  
+                throw new HttpError($"No se pudo eliminar la categoria con ID = {id}", HttpStatusCode.InternalServerError);
             }
         }
 

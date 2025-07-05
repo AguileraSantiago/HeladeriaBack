@@ -1,10 +1,7 @@
-﻿using System.Net;
-using HeladeriaAPI.Models.Helado;
+﻿using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Services;
 using HeladeriaAPI.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc; // es fundamental para usar [ApiController] y otros atributos.
 
 namespace HeladeriaAPI.Controllers
@@ -34,11 +31,11 @@ namespace HeladeriaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)] //200 OK si se encuentra
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))] //404 si no se encuentra
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(HttpMessage))] //500 en caso de error interno.
-        public async Task<ActionResult<Helado>> GetHelado(int id)
+        public async Task<ActionResult<AllHeladoDTO>> GetHelado(int id)
         {
             try
             {
-                return await _heladoServices.GetOneById(id);
+                return await _heladoServices.GetOneByIdDTO(id);
             }
             catch (HttpError ex) //Se maneja la excepción personalizada HttpError, permitiendo devolver el código y mensaje específico.
             {
@@ -58,7 +55,7 @@ namespace HeladeriaAPI.Controllers
         public async Task<ActionResult> Create([FromBody] CreateHeladoDTO helado)//Se llama al método de creación del servicio.
         {
             try
-            {   
+            {
                 var heladoCreated = await _heladoServices.CreateOne(helado);
                 return Created("api/helados", heladoCreated);// Created() devuelve código 201 y el objeto creado.
             }
@@ -84,7 +81,7 @@ namespace HeladeriaAPI.Controllers
             {
                 return await _heladoServices.UpdateOneById(id, helado);
             }
-            catch (HttpError ex) 
+            catch (HttpError ex)
             {
                 return StatusCode((int)ex.StatusCode, new HttpMessage(ex.Message));
             }

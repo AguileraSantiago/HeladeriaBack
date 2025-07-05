@@ -1,11 +1,7 @@
 ﻿using HeladeriaAPI.Models.Categoria;
 using HeladeriaAPI.Models.Categoria.Dto;
-using HeladeriaAPI.Models.Helado;
-using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Services;
 using HeladeriaAPI.Utils;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeladeriaAPI.Controllers
@@ -28,7 +24,7 @@ namespace HeladeriaAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)] 
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(HttpMessage))]
 
@@ -79,9 +75,9 @@ namespace HeladeriaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResponse))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(HttpMessage))]
-        public async Task<ActionResult<Categoria>> Update(int id, [FromBody] UpdateCategoriaDTO categoria) 
+        public async Task<ActionResult<Categoria>> Update(int id, [FromBody] UpdateCategoriaDTO categoria)
         {
-            try 
+            try
             {
                 return await _categoriaServices.UpdateOneById(id, categoria);
             }
@@ -102,7 +98,7 @@ namespace HeladeriaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))]
         public async Task<ActionResult> Delete(int id)
         {
-            try 
+            try
             {
                 await _categoriaServices.DeleteOneById(id);
                 return Ok(new HttpMessage($"Categoria con ID = {id} eliminada correctamente."));

@@ -17,6 +17,8 @@ namespace HeladeriaAPI.Config
         public DbSet<Helado> Helados { get; set; } = null!;
         public DbSet<Estado> Estados { get; set; } = null!;
         public DbSet<Ingrediente> Ingredientes { get; set; } = null!;
+        public DbSet<IngredienteHelado> IngredienteHelado { get; set; } = null!;
+
         public DbSet<Categoria> Categorias { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder) //Este método se llama cuando se está creando el modelo de la base de datos. Usás modelBuilder para configurar las entidades, relaciones, índices, valores por defecto, etc.
         {
@@ -49,15 +51,31 @@ namespace HeladeriaAPI.Config
             modelBuilder.Entity<Helado>().Property(h => h.FechaCreacion).HasDefaultValueSql("GETUTCDATE()"); //Indica que cuando se cree un helado, si no se indica fecha, se usará GETUTCDATE() de SQL Server. Es decir, pone automáticamente la fecha de creación en UTC.         
 
             //Relación muchos a muchos (Helado-Ingrendiente)
-            modelBuilder.Entity<Helado>()
-            .HasMany(u => u.Ingredientes)
-            .WithMany()
-            .UsingEntity<IngredienteHelado>(
-                l => l.HasOne<Ingrediente>().WithMany().HasForeignKey(e => e.IngredienteId),
-                r => r.HasOne<Helado>().WithMany().HasForeignKey(e => e.HeladoId)
-            );
+            // Relación muchos a muchos explícita entre Helado e Ingrediente
+            modelBuilder.Entity<IngredienteHelado>()
+                .HasKey(ih => new { ih.HeladoId, ih.IngredienteId }); // ✅ clave compuesta
 
-            modelBuilder.Entity<Categoria>().HasIndex(e => e.nombreCategoria).IsUnique(); 
+            modelBuilder.Entity<IngredienteHelado>()
+                .HasOne(ih => ih.Helado)
+                .WithMany(h => h.IngredienteHelado)
+                .HasForeignKey(ih => ih.HeladoId);
+
+            modelBuilder.Entity<IngredienteHelado>()
+                .HasOne(ih => ih.Ingrediente)
+                .WithMany()
+                .HasForeignKey(ih => ih.IngredienteId);
+
+            modelBuilder.Entity<IngredienteHelado>().HasData(
+    new IngredienteHelado { HeladoId = 1, IngredienteId = 2 }, // Leche en Menta Granizada
+    new IngredienteHelado { HeladoId = 1, IngredienteId = 5 }, // Chocolate en Menta Granizada
+    new IngredienteHelado { HeladoId = 1, IngredienteId = 3 }, // Azúcar en Menta Granizada
+    new IngredienteHelado { HeladoId = 2, IngredienteId = 1 }  // Default en Sambayon
+);
+
+
+
+
+            modelBuilder.Entity<Categoria>().HasIndex(e => e.nombreCategoria).IsUnique();
             modelBuilder.Entity<Categoria>().HasData(
                 new Categoria { Id = 1, nombreCategoria = "Frutales" },
                 new Categoria { Id = 2, nombreCategoria = "Granizados" },

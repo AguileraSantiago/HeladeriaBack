@@ -1,12 +1,11 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using HeladeriaAPI.Config;
-using HeladeriaAPI.Models.Estado;
 using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
 using HeladeriaAPI.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace HeladeriaAPI.Services
 {
@@ -33,31 +32,40 @@ namespace HeladeriaAPI.Services
         {
             var helado = await _db.Helados
                 .Where(h => h.Id == id)
+                .Include(h => h.Categoria)
                 .Include(h => h.Estado)
-                .Include(h => h.Ingredientes)
+                .Include(h => h.IngredienteHelado)
+                    .ThenInclude(ih => ih.Ingrediente)
                 .FirstOrDefaultAsync();
 
-            if (helado == null) // Si no lo encuentra, lanza HttpError con código 404.
+            if (helado == null)
             {
-                throw new HttpError($"No se encontro el helado con ID = {id}", HttpStatusCode.NotFound);
+                throw new HttpError($"No se encontró el helado con ID = {id}", HttpStatusCode.NotFound);
             }
 
             return helado;
         }
 
+
         //Devuelve una lista de todos los helados con su estado.
         // Mapea a DTOs (AllHeladoDTO) para respuesta liviana y estructurada.
         public async Task<List<AllHeladoDTO>> GetAll()
         {
-            var heladosDb = await _db.Helados.Include(hel => hel.Estado).ToListAsync();
+            var heladosDb = await _db.Helados
+                .Include(hel => hel.Estado)
+                .Include(cat => cat.Categoria)
+                .Include(h => h.IngredienteHelado)
+                .ThenInclude(ih => ih.Ingrediente)
+                .ToListAsync();
             var helados = _mapper.Map<List<AllHeladoDTO>>(heladosDb);
             return helados;
         }
 
         //Expone públicamente la lógica interna de búsqueda por ID.
-        public async Task<Helado> GetOneById(int id)
+        public async Task<AllHeladoDTO> GetOneByIdDTO(int id)
         {
-            return await GetOneByIdOrException(id);
+            var helado = await GetOneByIdOrException(id);
+            return _mapper.Map<AllHeladoDTO>(helado);
         }
 
         //Crea un helado nuevo a partir del DTO.
@@ -65,27 +73,39 @@ namespace HeladeriaAPI.Services
         //Asigna automáticamente el estado "Pendiente" usando EstadoServices.
         //Agrega el ingrediente "default" como mínimo inicial.
         // Esto asegura que ningún helado quede sin estado ni ingredientes.
-        public async Task<Helado> CreateOne(CreateHeladoDTO helado) {
+        public async Task<Helado> CreateOne(CreateHeladoDTO heladoDto)
+        {
+            var h = _mapper.Map<Helado>(heladoDto);
 
-            var h = _mapper.Map<Helado>(helado);
-
-            // Buscar estado por ID enviado por el usuario
-            var estado = await _db.Estados.FindAsync(helado.EstadoId);
+            // Buscar estado
+            var estado = await _db.Estados.FindAsync(heladoDto.EstadoId);
             if (estado == null)
-                throw new HttpError($"Estado con ID = {helado.EstadoId} no encontrado", HttpStatusCode.BadRequest);
+                throw new HttpError($"Estado con ID = {heladoDto.EstadoId} no encontrado", HttpStatusCode.BadRequest);
             h.Estado = estado;
 
-            // Asignar ingrediente default
-            var ingredienteDefault = await _ingredienteServices.GetOneByName("default");
-            if (ingredienteDefault == null)
-                throw new HttpError("Ingrediente 'default' no encontrado", HttpStatusCode.BadRequest);
-            h.Ingredientes = new List<Ingrediente> { ingredienteDefault };
-
-            // Buscar categoría por ID enviado por el usuario
-            var categoria = await _db.Categorias.FindAsync(helado.CategoriaId);
+            // Buscar categoría
+            var categoria = await _db.Categorias.FindAsync(heladoDto.CategoriaId);
             if (categoria == null)
-                throw new HttpError($"Categoría con ID = {helado.CategoriaId} no encontrada", HttpStatusCode.BadRequest);
+                throw new HttpError($"Categoría con ID = {heladoDto.CategoriaId} no encontrada", HttpStatusCode.BadRequest);
             h.Categoria = categoria;
+
+            // Validar ingredientes
+            if (heladoDto.IngredientesIds == null || !heladoDto.IngredientesIds.Any())
+                throw new HttpError("Debe especificar al menos un ingrediente.", HttpStatusCode.BadRequest);
+
+            var ingredientesValidos = await _db.Ingredientes
+                .Where(i => heladoDto.IngredientesIds.Contains(i.Id))
+                .ToListAsync();
+
+            var ingredientesInvalidos = heladoDto.IngredientesIds.Except(ingredientesValidos.Select(i => i.Id)).ToList();
+            if (ingredientesInvalidos.Any())
+                throw new HttpError($"Los siguientes ingredientes no existen: {string.Join(", ", ingredientesInvalidos)}", HttpStatusCode.BadRequest);
+
+            // Crear relaciones muchos a muchos
+            h.IngredienteHelado = heladoDto.IngredientesIds.Select(id => new IngredienteHelado
+            {
+                IngredienteId = id
+            }).ToList();
 
             h.FechaCreacion = DateTime.UtcNow;
 
@@ -93,6 +113,7 @@ namespace HeladeriaAPI.Services
             await _db.SaveChangesAsync();
             return h;
         }
+
 
         //Actualiza un helado existente.
         //Puntos importantes:
@@ -103,25 +124,39 @@ namespace HeladeriaAPI.Services
         {
             var heladoToUpdate = await GetOneByIdOrException(id);
 
-            // Actualizar campos uno por uno solo si vinieron con valor
-            if (helado.nombreHelado  != null) heladoToUpdate.nombreHelado = helado.nombreHelado;
+            // Actualizar campos básicos si fueron enviados
+            if (helado.nombreHelado != null) heladoToUpdate.nombreHelado = helado.nombreHelado;
             if (helado.Descripcion != null) heladoToUpdate.Descripcion = helado.Descripcion;
             if (helado.Precio.HasValue) heladoToUpdate.Precio = helado.Precio.Value;
             if (helado.IsArtesanal.HasValue) heladoToUpdate.IsArtesanal = helado.IsArtesanal.Value;
             if (helado.CategoriaId.HasValue) heladoToUpdate.CategoriaId = helado.CategoriaId.Value;
             if (helado.EstadoId.HasValue) heladoToUpdate.EstadoId = helado.EstadoId.Value;
 
-            // Ingredientes (solo si vienen)
-            if (helado.IngredientesIds != null && helado.IngredientesIds.Any())
+            // Agregar nuevos ingredientes sin eliminar los actuales
+            if (helado.IngredientesIds != null)
             {
-                var ingredientes = await _ingredienteServices.GetAllByIds(helado.IngredientesIds);
-                heladoToUpdate.Ingredientes = ingredientes;
+                var actuales = await _db.IngredienteHelado
+                    .Where(ih => ih.HeladoId == heladoToUpdate.Id)
+                    .ToListAsync();
+
+                _db.IngredienteHelado.RemoveRange(actuales);
+
+                heladoToUpdate.IngredienteHelado = new List<IngredienteHelado>();
+
+                foreach (var nuevoId in helado.IngredientesIds)
+                {
+                    heladoToUpdate.IngredienteHelado.Add(new IngredienteHelado
+                    {
+                        HeladoId = heladoToUpdate.Id,
+                        IngredienteId = nuevoId
+                    });
+                }
             }
-
             await _db.SaveChangesAsync();
-
             return heladoToUpdate;
         }
+
+
 
         // Borra un helado por ID.
         public async Task DeleteOneById(int id)
@@ -134,6 +169,6 @@ namespace HeladeriaAPI.Services
                 throw new HttpError($"No se pudo eliminar el helado con ID = {id}", HttpStatusCode.InternalServerError);
             }
         }
-          
+
     }
 }

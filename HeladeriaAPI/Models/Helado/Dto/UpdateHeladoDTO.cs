@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HeladeriaAPI.Models.Ingrediente;
 
 namespace HeladeriaAPI.Models.Helado.Dto
 {

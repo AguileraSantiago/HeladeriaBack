@@ -24,5 +24,11 @@ namespace HeladeriaAPI.Models.Helado.Dto
 
         [Required(ErrorMessage = "Debe seleccionar un estado.")]
         public int EstadoId { get; set; }
+
+        // AGREGAR LOS INGREDIENTES AL CREAR 
+
+        [Required(ErrorMessage = "Debe agregar los ingredientes.")]
+        public List<int>? IngredientesIds { get; set; }
+
     }
 }

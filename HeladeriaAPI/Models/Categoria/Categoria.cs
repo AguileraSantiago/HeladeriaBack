@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using HeladeriaAPI.Models.Helado;
 
 namespace HeladeriaAPI.Models.Categoria
 {
@@ -12,7 +11,5 @@ namespace HeladeriaAPI.Models.Categoria
 
         [Required]
         public string nombreCategoria { get; set; } = null!;
-
-        public ICollection<Helado.Helado> Helados { get; set; } = new List<Helado.Helado>();
     }
 }

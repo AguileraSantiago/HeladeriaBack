@@ -1,13 +1,10 @@
-﻿using AutoMapper; //para mapear DTOs a entidades.
+﻿using System.Net;
+using AutoMapper; //para mapear DTOs a entidades.
 using HeladeriaAPI.Config; //acceso a la base de datos.
-using HeladeriaAPI.Models.Estado;
-using HeladeriaAPI.Models.Helado;
-using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
 using HeladeriaAPI.Models.Ingrediente.Dto;
 using HeladeriaAPI.Utils; //HttpError y HttpStatusCode: manejo de errores.
 using Microsoft.EntityFrameworkCore; //EF Core para consultas a la base de datos.
-using System.Net;
 
 namespace HeladeriaAPI.Services
 {
@@ -89,7 +86,7 @@ namespace HeladeriaAPI.Services
         public async Task<Ingrediente> UpdateOneById(int id, UpdateIngredienteDTO ingrediente)
         {
             var ingredienteToUpdate = await GetOneByIdOrException(id);
-            
+
 
             var ingredienteUpdated = _mapper.Map(ingrediente, ingredienteToUpdate);
 

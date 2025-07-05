@@ -1,10 +1,8 @@
 ﻿using HeladeriaAPI.Models.Helado;
-using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
 using HeladeriaAPI.Models.Ingrediente.Dto;
 using HeladeriaAPI.Services;
 using HeladeriaAPI.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HeladeriaAPI.Controllers

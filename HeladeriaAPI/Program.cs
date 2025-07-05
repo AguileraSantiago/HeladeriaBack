@@ -33,7 +33,7 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
                 kvp => kvp.Key,
                kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToArray() ?? new string[0]
             );
-return new BadRequestObjectResult(new ValidationErrorResponse(errors));
+        return new BadRequestObjectResult(new ValidationErrorResponse(errors));
     };
 });
 

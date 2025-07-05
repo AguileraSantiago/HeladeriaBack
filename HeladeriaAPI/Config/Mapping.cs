@@ -1,18 +1,19 @@
 ﻿using AutoMapper; //permite convertir (mapear) objetos entre clases (por ejemplo, convertir un `Helado` en un `HeladoDto`, o viceversa) de forma automática.
+using HeladeriaAPI.Models.Categoria;
+using HeladeriaAPI.Models.Categoria.Dto;
 //Importa los DTOs que vas a usar para definir los mapeos.
 //Importa los modelos reales de base de datos que se van a mapear hacia/desde los DTOs.
 using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
 using HeladeriaAPI.Models.Ingrediente.Dto;
-using HeladeriaAPI.Models.Categoria;
-using HeladeriaAPI.Models.Categoria.Dto;
 
 namespace HeladeriaAPI.Config
 {
     public class Mapping : Profile
     {
-        public Mapping() {
+        public Mapping()
+        {
             // Para no convertir los atributos 'int?' a 0 en la conversion de los 'null'
             // valor defecto int -> 0
             CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
@@ -31,6 +32,14 @@ namespace HeladeriaAPI.Config
 
             //PD: Esta solución hay que aplicarla para todos aquellos tipos que no tengan como valor por defecto 'null'
 
+            CreateMap<Helado, AllHeladoDTO>()
+     .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.Categoria.nombreCategoria))
+     .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.Estado.nombreEstado))
+     .ForMember(dest => dest.Ingredientes, opt => opt.MapFrom(src => src.IngredienteHelado.Select(ih => ih.Ingrediente.nombreIngrediente).ToList()));
+
+
+
+
 
             CreateMap<CreateHeladoDTO, Helado>().ReverseMap();
 
@@ -42,7 +51,6 @@ namespace HeladeriaAPI.Config
                     opts.Condition((src, dest, srcMember) => srcMember != null);
                 });
 
-            CreateMap<Helado, AllHeladoDTO>().ReverseMap();
 
             // Ingrediente mappings
             CreateMap<CreateIngredienteDTO, Ingrediente>().ReverseMap();
@@ -60,9 +68,10 @@ namespace HeladeriaAPI.Config
                     opts.Condition((src, dest, srcMember) => srcMember != null);
                 });
 
-            CreateMap<Categoria, AllCategoriaDTO>().ReverseMap();
+            CreateMap<Categoria, AllCategoriaDTO>()
+                .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.nombreCategoria));
 
-            CreateMap<Helado, NombreHeladoDTO>();
+
         }
     }
 }
