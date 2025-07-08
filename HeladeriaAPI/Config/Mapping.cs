@@ -1,6 +1,10 @@
 ﻿using AutoMapper; //permite convertir (mapear) objetos entre clases (por ejemplo, convertir un `Helado` en un `HeladoDto`, o viceversa) de forma automática.
 using HeladeriaAPI.Models.Categoria;
 using HeladeriaAPI.Models.Categoria.Dto;
+using HeladeriaAPI.Models.Estado;
+
+using HeladeriaAPI.Models.Estado.Dto;
+
 //Importa los DTOs que vas a usar para definir los mapeos.
 //Importa los modelos reales de base de datos que se van a mapear hacia/desde los DTOs.
 using HeladeriaAPI.Models.Helado;
@@ -33,9 +37,9 @@ namespace HeladeriaAPI.Config
             //PD: Esta solución hay que aplicarla para todos aquellos tipos que no tengan como valor por defecto 'null'
 
             CreateMap<Helado, AllHeladoDTO>()
-     .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.Categoria.nombreCategoria))
-     .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.Estado.nombreEstado))
-     .ForMember(dest => dest.Ingredientes, opt => opt.MapFrom(src => src.IngredienteHelado.Select(ih => ih.Ingrediente.nombreIngrediente).ToList()));
+                 .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.Categoria.nombreCategoria))
+                 .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.Estado.nombreEstado))
+                 .ForMember(dest => dest.Ingredientes, opt => opt.MapFrom(src => src.IngredienteHelado.Select(ih => ih.Ingrediente.nombreIngrediente).ToList()));
 
 
 
@@ -70,6 +74,9 @@ namespace HeladeriaAPI.Config
 
             CreateMap<Categoria, AllCategoriaDTO>()
                 .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.nombreCategoria));
+
+            CreateMap<Estado, AllEstadoDTO>()
+    .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.nombreEstado));
 
 
         }

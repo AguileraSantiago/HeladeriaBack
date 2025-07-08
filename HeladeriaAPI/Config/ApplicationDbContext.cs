@@ -40,12 +40,11 @@ namespace HeladeriaAPI.Config
             );
             modelBuilder.Entity<Ingrediente>().HasIndex(e => e.nombreIngrediente).IsUnique(); //Lo mismo, pero para los ingredientes. No se permite que se repita un nombre como "Azúcar".
             modelBuilder.Entity<Ingrediente>().HasData(
-                new Ingrediente { Id = 1, nombreIngrediente = "default" },
-                new Ingrediente { Id = 2, nombreIngrediente = "Leche" },
-                new Ingrediente { Id = 3, nombreIngrediente = "Azucar" },
-                new Ingrediente { Id = 4, nombreIngrediente = "Alcohol" },
-                new Ingrediente { Id = 5, nombreIngrediente = "Chocolate" },
-                new Ingrediente { Id = 6, nombreIngrediente = "Crema" }
+                new Ingrediente { Id = 1, nombreIngrediente = "Leche" },
+                new Ingrediente { Id = 2, nombreIngrediente = "Azucar" },
+                new Ingrediente { Id = 3, nombreIngrediente = "Alcohol" },
+                new Ingrediente { Id = 4, nombreIngrediente = "Chocolate" },
+                new Ingrediente { Id = 5, nombreIngrediente = "Crema" }
             );
             // Para que la fecha de creación se establezca automáticamente al crear un nuevo helado
             modelBuilder.Entity<Helado>().Property(h => h.FechaCreacion).HasDefaultValueSql("GETUTCDATE()"); //Indica que cuando se cree un helado, si no se indica fecha, se usará GETUTCDATE() de SQL Server. Es decir, pone automáticamente la fecha de creación en UTC.         

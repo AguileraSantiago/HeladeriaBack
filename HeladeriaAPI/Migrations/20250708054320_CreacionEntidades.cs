@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,7 +8,7 @@
 namespace HeladeriaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class AgregarCategoriaYHelado : Migration
+    public partial class CreacionEntidades : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +19,7 @@ namespace HeladeriaAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    nombreCategoria = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +32,7 @@ namespace HeladeriaAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    nombreEstado = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,7 +45,7 @@ namespace HeladeriaAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    nombreIngrediente = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -57,7 +58,7 @@ namespace HeladeriaAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    nombreHelado = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Descripcion = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Precio = table.Column<double>(type: "float", nullable: false),
                     IsArtesanal = table.Column<bool>(type: "bit", nullable: false),
@@ -86,8 +87,8 @@ namespace HeladeriaAPI.Migrations
                 name: "IngredienteHelado",
                 columns: table => new
                 {
-                    IngredienteId = table.Column<int>(type: "int", nullable: false),
-                    HeladoId = table.Column<int>(type: "int", nullable: false)
+                    HeladoId = table.Column<int>(type: "int", nullable: false),
+                    IngredienteId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,7 +109,7 @@ namespace HeladeriaAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Categorias",
-                columns: new[] { "Id", "Nombre" },
+                columns: new[] { "Id", "nombreCategoria" },
                 values: new object[,]
                 {
                     { 1, "Frutales" },
@@ -119,7 +120,7 @@ namespace HeladeriaAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Estados",
-                columns: new[] { "Id", "Nombre" },
+                columns: new[] { "Id", "nombreEstado" },
                 values: new object[,]
                 {
                     { 1, "Disponible" },
@@ -129,27 +130,47 @@ namespace HeladeriaAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Ingredientes",
-                columns: new[] { "Id", "Nombre" },
+                columns: new[] { "Id", "nombreIngrediente" },
                 values: new object[,]
                 {
-                    { 1, "default" },
-                    { 2, "Leche" },
-                    { 3, "Azucar" },
-                    { 4, "Alcohol" },
-                    { 5, "Chocolate" },
-                    { 6, "Crema" }
+                    { 1, "Leche" },
+                    { 2, "Azucar" },
+                    { 3, "Alcohol" },
+                    { 4, "Chocolate" },
+                    { 5, "Crema" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Helados",
+                columns: new[] { "Id", "CategoriaId", "Descripcion", "EstadoId", "FechaCreacion", "IsArtesanal", "Precio", "nombreHelado" },
+                values: new object[,]
+                {
+                    { 1, 2, "Helado de menta con chips de chocolate", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1500.0, "Menta Granizada" },
+                    { 2, 3, "Helado de sambayon", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2500.0, "Sambayon" },
+                    { 3, 1, "Helado de pastel de lima", 3, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1000.0, "Pastel de lima" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "IngredienteHelado",
+                columns: new[] { "HeladoId", "IngredienteId" },
+                values: new object[,]
+                {
+                    { 1, 2 },
+                    { 1, 3 },
+                    { 1, 5 },
+                    { 2, 1 }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categorias_Nombre",
+                name: "IX_Categorias_nombreCategoria",
                 table: "Categorias",
-                column: "Nombre",
+                column: "nombreCategoria",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Estados_Nombre",
+                name: "IX_Estados_nombreEstado",
                 table: "Estados",
-                column: "Nombre",
+                column: "nombreEstado",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -163,14 +184,20 @@ namespace HeladeriaAPI.Migrations
                 column: "EstadoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Helados_nombreHelado",
+                table: "Helados",
+                column: "nombreHelado",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IngredienteHelado_IngredienteId",
                 table: "IngredienteHelado",
                 column: "IngredienteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ingredientes_Nombre",
+                name: "IX_Ingredientes_nombreIngrediente",
                 table: "Ingredientes",
-                column: "Nombre",
+                column: "nombreIngrediente",
                 unique: true);
         }
 

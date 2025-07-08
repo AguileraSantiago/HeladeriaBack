@@ -204,31 +204,26 @@ namespace HeladeriaAPI.Migrations
                         new
                         {
                             Id = 1,
-                            nombreIngrediente = "default"
-                        },
-                        new
-                        {
-                            Id = 2,
                             nombreIngrediente = "Leche"
                         },
                         new
                         {
-                            Id = 3,
+                            Id = 2,
                             nombreIngrediente = "Azucar"
                         },
                         new
                         {
-                            Id = 4,
+                            Id = 3,
                             nombreIngrediente = "Alcohol"
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 4,
                             nombreIngrediente = "Chocolate"
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 5,
                             nombreIngrediente = "Crema"
                         });
                 });
@@ -246,12 +241,34 @@ namespace HeladeriaAPI.Migrations
                     b.HasIndex("IngredienteId");
 
                     b.ToTable("IngredienteHelado");
+
+                    b.HasData(
+                        new
+                        {
+                            HeladoId = 1,
+                            IngredienteId = 2
+                        },
+                        new
+                        {
+                            HeladoId = 1,
+                            IngredienteId = 5
+                        },
+                        new
+                        {
+                            HeladoId = 1,
+                            IngredienteId = 3
+                        },
+                        new
+                        {
+                            HeladoId = 2,
+                            IngredienteId = 1
+                        });
                 });
 
             modelBuilder.Entity("HeladeriaAPI.Models.Helado.Helado", b =>
                 {
                     b.HasOne("HeladeriaAPI.Models.Categoria.Categoria", "Categoria")
-                        .WithMany("Helados")
+                        .WithMany()
                         .HasForeignKey("CategoriaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -269,22 +286,26 @@ namespace HeladeriaAPI.Migrations
 
             modelBuilder.Entity("HeladeriaAPI.Models.Ingrediente.IngredienteHelado", b =>
                 {
-                    b.HasOne("HeladeriaAPI.Models.Helado.Helado", null)
-                        .WithMany()
+                    b.HasOne("HeladeriaAPI.Models.Helado.Helado", "Helado")
+                        .WithMany("IngredienteHelado")
                         .HasForeignKey("HeladoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HeladeriaAPI.Models.Ingrediente.Ingrediente", null)
+                    b.HasOne("HeladeriaAPI.Models.Ingrediente.Ingrediente", "Ingrediente")
                         .WithMany()
                         .HasForeignKey("IngredienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Helado");
+
+                    b.Navigation("Ingrediente");
                 });
 
-            modelBuilder.Entity("HeladeriaAPI.Models.Categoria.Categoria", b =>
+            modelBuilder.Entity("HeladeriaAPI.Models.Helado.Helado", b =>
                 {
-                    b.Navigation("Helados");
+                    b.Navigation("IngredienteHelado");
                 });
 #pragma warning restore 612, 618
         }

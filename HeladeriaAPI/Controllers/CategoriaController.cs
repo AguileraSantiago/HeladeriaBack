@@ -18,6 +18,7 @@ namespace HeladeriaAPI.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<List<AllCategoriaDTO>> GetCategorias()
         {
             return await _categoriaServices.GetAll();
