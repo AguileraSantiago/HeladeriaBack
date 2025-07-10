@@ -76,7 +76,12 @@ namespace HeladeriaAPI.Config
                 .ForMember(dest => dest.nombreCategoria, opt => opt.MapFrom(src => src.nombreCategoria));
 
             CreateMap<Estado, AllEstadoDTO>()
-    .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.nombreEstado));
+                .ForMember(dest => dest.nombreEstado, opt => opt.MapFrom(src => src.nombreEstado));
+
+
+            CreateMap<IngredienteHelado, AllIngredienteHeladoDTO>()
+                .ForMember(dest => dest.nombreHelado, opt => opt.MapFrom(src => src.Helado.nombreHelado))
+                .ForMember(dest => dest.Ingredientes, opt => opt.MapFrom(src => src.Ingrediente.nombreIngrediente));
 
 
         }

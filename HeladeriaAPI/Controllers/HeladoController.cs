@@ -1,5 +1,6 @@
 ﻿using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
+using HeladeriaAPI.Models.Ingrediente.Dto;
 using HeladeriaAPI.Services;
 using HeladeriaAPI.Utils;
 using Microsoft.AspNetCore.Mvc; // es fundamental para usar [ApiController] y otros atributos.
@@ -17,6 +18,18 @@ namespace HeladeriaAPI.Controllers
         {
             _heladoServices = heladoServices;
         }
+
+        [HttpGet("{id}/ingredientes")]
+        public async Task<ActionResult<AllIngredienteHeladoDTO>> GetIngredientesDeHelado(int id)
+        {
+            var resultado = await _heladoServices.GetIngredientesDeHelado(id);
+
+            if (resultado == null)
+                return NotFound($"No se encontró el helado con ID {id}");
+
+            return Ok(resultado);
+        }
+
 
         [HttpGet]//Responde a solicitudes GET a api/helados.
         //Retorna una lista de DTOs (no entidades completas), mapeados previamente en el servicio.

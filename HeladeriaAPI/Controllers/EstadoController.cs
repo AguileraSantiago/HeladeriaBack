@@ -2,9 +2,7 @@
 using HeladeriaAPI.Models.Estado.Dto;
 using HeladeriaAPI.Services;
 using HeladeriaAPI.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
 namespace HeladeriaAPI.Controllers
 {
     [Route("api/estados")]

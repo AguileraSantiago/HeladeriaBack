@@ -65,11 +65,11 @@ namespace HeladeriaAPI.Config
                 .HasForeignKey(ih => ih.IngredienteId);
 
             modelBuilder.Entity<IngredienteHelado>().HasData(
-    new IngredienteHelado { HeladoId = 1, IngredienteId = 2 }, // Leche en Menta Granizada
-    new IngredienteHelado { HeladoId = 1, IngredienteId = 5 }, // Chocolate en Menta Granizada
-    new IngredienteHelado { HeladoId = 1, IngredienteId = 3 }, // Azúcar en Menta Granizada
-    new IngredienteHelado { HeladoId = 2, IngredienteId = 1 }  // Default en Sambayon
-);
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 2 }, // Leche en Menta Granizada
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 5 }, // Chocolate en Menta Granizada
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 3 }, // Azúcar en Menta Granizada
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 1 }  // Default en Sambayon
+            );
 
 
 

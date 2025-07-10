@@ -4,6 +4,7 @@ using HeladeriaAPI.Config;
 using HeladeriaAPI.Models.Helado;
 using HeladeriaAPI.Models.Helado.Dto;
 using HeladeriaAPI.Models.Ingrediente;
+using HeladeriaAPI.Models.Ingrediente.Dto;
 using HeladeriaAPI.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,29 @@ namespace HeladeriaAPI.Services
             _ingredienteServices = ingredienteServices;
             _estadoServices = estadoServices;
         }
+
+        public async Task<AllIngredienteHeladoDTO?> GetIngredientesDeHelado(int heladoId)
+        {
+            var helado = await _db.Helados
+                .Include(h => h.IngredienteHelado)
+                    .ThenInclude(ih => ih.Ingrediente)
+                .FirstOrDefaultAsync(h => h.Id == heladoId);
+
+            if (helado == null) return null;
+
+            return new AllIngredienteHeladoDTO
+            {
+                HeladoId = helado.Id,
+                nombreHelado = helado.nombreHelado,
+                Ingredientes = helado.IngredienteHelado.Select(ih => new IngredienteDTO
+                {
+                    IngredienteId = ih.IngredienteId,
+                    nombreIngrediente = ih.Ingrediente.nombreIngrediente
+                }).ToList()
+            };
+        }
+
+
 
         // Busca un helado por ID incluyendo sus relaciones (Estado e Ingredientes).
         private async Task<Helado> GetOneByIdOrException(int id)
