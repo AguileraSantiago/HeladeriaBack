@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -7,7 +8,7 @@
 namespace HeladeriaAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionEntidades : Migration
+    public partial class CreacionDeEntidades : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -114,7 +115,8 @@ namespace HeladeriaAPI.Migrations
                     { 1, "Frutales" },
                     { 2, "Granizados" },
                     { 3, "Chocolate" },
-                    { 4, "Al agua" }
+                    { 4, "Al agua" },
+                    { 5, "Clasicos" }
                 });
 
             migrationBuilder.InsertData(
@@ -136,7 +138,10 @@ namespace HeladeriaAPI.Migrations
                     { 2, "Azucar" },
                     { 3, "Alcohol" },
                     { 4, "Chocolate" },
-                    { 5, "Crema" }
+                    { 5, "Crema" },
+                    { 6, "Huevo" },
+                    { 7, "Limon" },
+                    { 8, "Esencia de menta" }
                 });
 
             migrationBuilder.InsertData(
@@ -144,9 +149,9 @@ namespace HeladeriaAPI.Migrations
                 columns: new[] { "Id", "CategoriaId", "Descripcion", "EstadoId", "FechaCreacion", "IsArtesanal", "Precio", "nombreHelado" },
                 values: new object[,]
                 {
-                    { 1, 2, "Helado de menta con chips de chocolate", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1500.0, "Menta Granizada" },
-                    { 2, 3, "Helado de sambayon", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2500.0, "Sambayon" },
-                    { 3, 1, "Helado de pastel de lima", 3, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1000.0, "Pastel de lima" }
+                    { 1, 2, "Helado fresco y cremoso con intenso sabor a menta natural, combinado con trocitos de chocolate semiamargo", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 1500.0, "Menta Granizada" },
+                    { 2, 5, "Cremoso helado con una textura suave y un sabor inconfundible que combina dulzura y un toque alcohólico delicado ", 1, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 2500.0, "Sambayon" },
+                    { 3, 1, "Refrescante y dulce a la vez, este helado recrea el sabor del famoso postre Lemon Pie", 3, new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 1000.0, "Pastel de lima" }
                 });
 
             migrationBuilder.InsertData(
@@ -154,10 +159,21 @@ namespace HeladeriaAPI.Migrations
                 columns: new[] { "HeladoId", "IngredienteId" },
                 values: new object[,]
                 {
+                    { 1, 1 },
                     { 1, 2 },
-                    { 1, 3 },
+                    { 1, 4 },
                     { 1, 5 },
-                    { 2, 1 }
+                    { 1, 8 },
+                    { 2, 1 },
+                    { 2, 2 },
+                    { 2, 3 },
+                    { 2, 5 },
+                    { 2, 6 },
+                    { 3, 1 },
+                    { 3, 2 },
+                    { 3, 5 },
+                    { 3, 6 },
+                    { 3, 7 }
                 });
 
             migrationBuilder.CreateIndex(

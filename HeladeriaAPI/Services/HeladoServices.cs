@@ -221,9 +221,16 @@ namespace HeladeriaAPI.Services
             };
 
             await _db.IngredienteHelado.AddAsync(ingredienteHelado);
-            await _db.SaveChangesAsync();
-        }
 
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new HttpError("Error inesperado al guardar el ingrediente al helado.", HttpStatusCode.InternalServerError);
+            }
+        }
 
         public async Task RemoveIngredienteFromHelado(int heladoId, int ingredienteId)
         {
@@ -234,7 +241,15 @@ namespace HeladeriaAPI.Services
                 throw new HttpError("No existe esa relación entre helado e ingrediente.", HttpStatusCode.NotFound);
 
             _db.IngredienteHelado.Remove(relacion);
-            await _db.SaveChangesAsync();
+
+            try
+            {
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw new HttpError("Error inesperado al eliminar el ingrediente del helado.", HttpStatusCode.InternalServerError);
+            }
         }
     }
 }

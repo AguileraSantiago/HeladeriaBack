@@ -25,26 +25,30 @@ namespace HeladeriaAPI.Config
 
             modelBuilder.Entity<Helado>().HasIndex(h => h.nombreHelado).IsUnique();
             modelBuilder.Entity<Helado>().HasData(
-                new Helado { Id = 1, nombreHelado = "Menta Granizada", Descripcion = "Helado de menta con chips de chocolate", Precio = 1500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 2 },
-                new Helado { Id = 2, nombreHelado = "Sambayon", Descripcion = "Helado de sambayon", Precio = 2500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 3 },
-                new Helado { Id = 3, nombreHelado = "Pastel de lima", Descripcion = "Helado de pastel de lima", Precio = 1000.00, IsArtesanal = true, EstadoId = 3, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 1 }
+                new Helado { Id = 1, nombreHelado = "Menta Granizada", Descripcion = "Helado fresco y cremoso con intenso sabor a menta natural, combinado con trocitos de chocolate semiamargo", Precio = 1500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 2 },
+                new Helado { Id = 2, nombreHelado = "Sambayon", Descripcion = "Cremoso helado con una textura suave y un sabor inconfundible que combina dulzura y un toque alcohólico delicado ", Precio = 2500.00, IsArtesanal = false, EstadoId = 1, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 5 },
+                new Helado { Id = 3, nombreHelado = "Pastel de lima", Descripcion = "Refrescante y dulce a la vez, este helado recrea el sabor del famoso postre Lemon Pie", Precio = 1000.00, IsArtesanal = true, EstadoId = 3, FechaCreacion = new DateTime(2024, 07, 01), CategoriaId = 1 }
                 );
 
-
             modelBuilder.Entity<Estado>().HasIndex(e => e.nombreEstado).IsUnique(); //Crea un índice único en la columna Nombre de la tabla Estados. Así se evita que haya dos estados con el mismo nombre (por ejemplo, dos "Disponible").
+
             //Inserta estos tres registros automáticamente al crear o migrar la base de datos. Muy útil para tener datos básicos predefinidos que necesita tu sistema.
             modelBuilder.Entity<Estado>().HasData(
                 new Estado { Id = 1, nombreEstado = "Disponible" },
                 new Estado { Id = 2, nombreEstado = "Pendiente" },
                 new Estado { Id = 3, nombreEstado = "No Disponible" }
             );
+
             modelBuilder.Entity<Ingrediente>().HasIndex(e => e.nombreIngrediente).IsUnique(); //Lo mismo, pero para los ingredientes. No se permite que se repita un nombre como "Azúcar".
             modelBuilder.Entity<Ingrediente>().HasData(
                 new Ingrediente { Id = 1, nombreIngrediente = "Leche" },
                 new Ingrediente { Id = 2, nombreIngrediente = "Azucar" },
                 new Ingrediente { Id = 3, nombreIngrediente = "Alcohol" },
                 new Ingrediente { Id = 4, nombreIngrediente = "Chocolate" },
-                new Ingrediente { Id = 5, nombreIngrediente = "Crema" }
+                new Ingrediente { Id = 5, nombreIngrediente = "Crema" },
+                new Ingrediente { Id = 6, nombreIngrediente = "Huevo" },
+                new Ingrediente { Id = 7, nombreIngrediente = "Limon" },
+                new Ingrediente { Id = 8, nombreIngrediente = "Esencia de menta" }
             );
             // Para que la fecha de creación se establezca automáticamente al crear un nuevo helado
             modelBuilder.Entity<Helado>().Property(h => h.FechaCreacion).HasDefaultValueSql("GETUTCDATE()"); //Indica que cuando se cree un helado, si no se indica fecha, se usará GETUTCDATE() de SQL Server. Es decir, pone automáticamente la fecha de creación en UTC.         
@@ -65,21 +69,32 @@ namespace HeladeriaAPI.Config
                 .HasForeignKey(ih => ih.IngredienteId);
 
             modelBuilder.Entity<IngredienteHelado>().HasData(
-                new IngredienteHelado { HeladoId = 1, IngredienteId = 2 }, // Leche en Menta Granizada
-                new IngredienteHelado { HeladoId = 1, IngredienteId = 5 }, // Chocolate en Menta Granizada
-                new IngredienteHelado { HeladoId = 1, IngredienteId = 3 }, // Azúcar en Menta Granizada
-                new IngredienteHelado { HeladoId = 2, IngredienteId = 1 }  // Default en Sambayon
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 1 }, 
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 4 }, 
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 2 }, 
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 8 }, 
+                new IngredienteHelado { HeladoId = 1, IngredienteId = 5 }, 
+
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 1 },
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 5 },
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 6 },
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 2 },
+                new IngredienteHelado { HeladoId = 2, IngredienteId = 3 },
+
+                new IngredienteHelado { HeladoId = 3, IngredienteId = 1 },
+                new IngredienteHelado { HeladoId = 3, IngredienteId = 5 },
+                new IngredienteHelado { HeladoId = 3, IngredienteId = 6 },
+                new IngredienteHelado { HeladoId = 3, IngredienteId = 2 },
+                new IngredienteHelado { HeladoId = 3, IngredienteId = 7 }
             );
-
-
-
 
             modelBuilder.Entity<Categoria>().HasIndex(e => e.nombreCategoria).IsUnique();
             modelBuilder.Entity<Categoria>().HasData(
                 new Categoria { Id = 1, nombreCategoria = "Frutales" },
                 new Categoria { Id = 2, nombreCategoria = "Granizados" },
                 new Categoria { Id = 3, nombreCategoria = "Chocolate" },
-                new Categoria { Id = 4, nombreCategoria = "Al agua" }
+                new Categoria { Id = 4, nombreCategoria = "Al agua" },
+                new Categoria { Id = 5, nombreCategoria = "Clasicos" }
             );
 
             //¿Qué significa esto?

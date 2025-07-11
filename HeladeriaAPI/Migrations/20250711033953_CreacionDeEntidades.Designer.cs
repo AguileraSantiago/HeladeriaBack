@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HeladeriaAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250708054320_CreacionEntidades")]
-    partial class CreacionEntidades
+    [Migration("20250711033953_CreacionDeEntidades")]
+    partial class CreacionDeEntidades
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,11 @@ namespace HeladeriaAPI.Migrations
                         {
                             Id = 4,
                             nombreCategoria = "Al agua"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            nombreCategoria = "Clasicos"
                         });
                 });
 
@@ -153,7 +158,7 @@ namespace HeladeriaAPI.Migrations
                         {
                             Id = 1,
                             CategoriaId = 2,
-                            Descripcion = "Helado de menta con chips de chocolate",
+                            Descripcion = "Helado fresco y cremoso con intenso sabor a menta natural, combinado con trocitos de chocolate semiamargo",
                             EstadoId = 1,
                             FechaCreacion = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsArtesanal = false,
@@ -163,8 +168,8 @@ namespace HeladeriaAPI.Migrations
                         new
                         {
                             Id = 2,
-                            CategoriaId = 3,
-                            Descripcion = "Helado de sambayon",
+                            CategoriaId = 5,
+                            Descripcion = "Cremoso helado con una textura suave y un sabor inconfundible que combina dulzura y un toque alcohólico delicado ",
                             EstadoId = 1,
                             FechaCreacion = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsArtesanal = false,
@@ -175,7 +180,7 @@ namespace HeladeriaAPI.Migrations
                         {
                             Id = 3,
                             CategoriaId = 1,
-                            Descripcion = "Helado de pastel de lima",
+                            Descripcion = "Refrescante y dulce a la vez, este helado recrea el sabor del famoso postre Lemon Pie",
                             EstadoId = 3,
                             FechaCreacion = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsArtesanal = true,
@@ -228,6 +233,21 @@ namespace HeladeriaAPI.Migrations
                         {
                             Id = 5,
                             nombreIngrediente = "Crema"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            nombreIngrediente = "Huevo"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            nombreIngrediente = "Limon"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            nombreIngrediente = "Esencia de menta"
                         });
                 });
 
@@ -249,7 +269,22 @@ namespace HeladeriaAPI.Migrations
                         new
                         {
                             HeladoId = 1,
+                            IngredienteId = 1
+                        },
+                        new
+                        {
+                            HeladoId = 1,
+                            IngredienteId = 4
+                        },
+                        new
+                        {
+                            HeladoId = 1,
                             IngredienteId = 2
+                        },
+                        new
+                        {
+                            HeladoId = 1,
+                            IngredienteId = 8
                         },
                         new
                         {
@@ -258,13 +293,53 @@ namespace HeladeriaAPI.Migrations
                         },
                         new
                         {
-                            HeladoId = 1,
-                            IngredienteId = 3
+                            HeladoId = 2,
+                            IngredienteId = 1
                         },
                         new
                         {
                             HeladoId = 2,
+                            IngredienteId = 5
+                        },
+                        new
+                        {
+                            HeladoId = 2,
+                            IngredienteId = 6
+                        },
+                        new
+                        {
+                            HeladoId = 2,
+                            IngredienteId = 2
+                        },
+                        new
+                        {
+                            HeladoId = 2,
+                            IngredienteId = 3
+                        },
+                        new
+                        {
+                            HeladoId = 3,
                             IngredienteId = 1
+                        },
+                        new
+                        {
+                            HeladoId = 3,
+                            IngredienteId = 5
+                        },
+                        new
+                        {
+                            HeladoId = 3,
+                            IngredienteId = 6
+                        },
+                        new
+                        {
+                            HeladoId = 3,
+                            IngredienteId = 2
+                        },
+                        new
+                        {
+                            HeladoId = 3,
+                            IngredienteId = 7
                         });
                 });
 
