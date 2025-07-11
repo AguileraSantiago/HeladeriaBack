@@ -194,5 +194,47 @@ namespace HeladeriaAPI.Services
             }
         }
 
+        public async Task AddIngredienteToHelado(int heladoId, int ingredienteId)
+        {
+            // Verificar si el helado existe
+            var helado = await _db.Helados.FindAsync(heladoId);
+            if (helado == null)
+                throw new HttpError($"No se encontró el helado con ID = {heladoId}", HttpStatusCode.NotFound);
+
+            // Verificar si el ingrediente existe
+            var ingrediente = await _db.Ingredientes.FindAsync(ingredienteId);
+            if (ingrediente == null)
+                throw new HttpError($"Ingrediente con ID = {ingredienteId} no encontrado", HttpStatusCode.BadRequest);
+
+            // Verificar si ya existe la relación
+            var existe = await _db.IngredienteHelado
+                .AnyAsync(ih => ih.HeladoId == heladoId && ih.IngredienteId == ingredienteId);
+
+            if (existe)
+                throw new HttpError("Ese ingrediente ya está asociado al helado.", HttpStatusCode.BadRequest);
+
+            // Crear relación
+            var ingredienteHelado = new IngredienteHelado
+            {
+                HeladoId = heladoId,
+                IngredienteId = ingredienteId
+            };
+
+            await _db.IngredienteHelado.AddAsync(ingredienteHelado);
+            await _db.SaveChangesAsync();
+        }
+
+
+        public async Task RemoveIngredienteFromHelado(int heladoId, int ingredienteId)
+        {
+            var relacion = await _db.IngredienteHelado
+                .FirstOrDefaultAsync(ih => ih.HeladoId == heladoId && ih.IngredienteId == ingredienteId);
+
+            if (relacion == null)
+                throw new HttpError("No existe esa relación entre helado e ingrediente.", HttpStatusCode.NotFound);
+
+            _db.IngredienteHelado.Remove(relacion);
+            await _db.SaveChangesAsync();
+        }
     }
 }

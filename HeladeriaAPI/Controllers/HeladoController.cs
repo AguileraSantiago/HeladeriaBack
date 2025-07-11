@@ -124,5 +124,46 @@ namespace HeladeriaAPI.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, new HttpMessage($"Algo salio mal eliminando el helado con ID = {id}"));
             }
         }
+
+        [HttpPost("{id}/ingredientes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(HttpMessage))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))]
+        public async Task<ActionResult> AddIngredienteToHelado(int id, [FromBody] AddIngredienteToHeladoDTO dto)
+        {
+            try
+            {
+                await _heladoServices.AddIngredienteToHelado(id, dto.IngredienteId);
+                return Ok(new HttpMessage($"Ingrediente agregado correctamente al helado con ID = {id}."));
+            }
+            catch (HttpError ex)
+            {
+                return StatusCode((int)ex.StatusCode, new HttpMessage(ex.Message));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new HttpMessage("Error interno al agregar ingrediente."));
+            }
+        }
+
+        [HttpDelete("{id}/ingredientes/{ingredienteId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(HttpMessage))]
+        public async Task<ActionResult> RemoveIngredienteFromHelado(int id, int ingredienteId)
+        {
+            try
+            {
+                await _heladoServices.RemoveIngredienteFromHelado(id, ingredienteId);
+                return Ok(new HttpMessage($"Ingrediente con ID = {ingredienteId} eliminado del helado con ID = {id}."));
+            }
+            catch (HttpError ex)
+            {
+                return StatusCode((int)ex.StatusCode, new HttpMessage(ex.Message));
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new HttpMessage("Error interno al eliminar ingrediente."));
+            }
+        }
     }
 }

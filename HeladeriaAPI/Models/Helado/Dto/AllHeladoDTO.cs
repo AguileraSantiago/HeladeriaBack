@@ -4,7 +4,9 @@
     {
         public int Id { get; set; }
         public string nombreHelado { get; set; } = null!;
+        public string Descripcion { get; set; } = null!;
         public double Precio { get; set; }
+        public bool IsArtesanal { get; set; }
         public string nombreCategoria { get; set; } = null!;
         public string nombreEstado { get; set; } = null!;
         public List<string> Ingredientes { get; set; } = new List<string>();
